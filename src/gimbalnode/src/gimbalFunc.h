@@ -3,7 +3,7 @@ struct Quaternion {
   double y;
   double z;
   double w;
-}
+};
 
 void RotateServos(Quaternion input, Quaternion output);
 

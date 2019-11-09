@@ -17,7 +17,7 @@ Quaternion quatDesired = {
 
 Quaternion quatCurrent;
 
-int main(char argc, char* argv) {
+int main(int argc, char** argv) {
   ros::init(argc, argv, "gimbalNode");
   
   ros::Rate loop_rate(LOOP_RATE_GIMBAL);
@@ -53,4 +53,4 @@ Quaternion RecieveQuaternionIMU() {
   Quaternion dummyQuaternion = {0, 0, 0, 1};
   return dummyQuaternion;
 }
-}
+
