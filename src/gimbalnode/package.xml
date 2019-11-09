@@ -1,0 +1,17 @@
+<package format="2">
+  <name>gimbalnode</name>
+  <version>1.2.4</version>
+  <description>
+  This package provides gimbal capability.
+  </description>
+  <maintainer email="ucruas@gmail.com">UCR-UAS</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+</package>
