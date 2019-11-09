@@ -20,20 +20,22 @@ Quaternion quatCurrent;
 int main(int argc, char** argv) {
   ros::init(argc, argv, "gimbalNode");
   
+  ros::NodeHandle n;
+
   ros::Rate loop_rate(LOOP_RATE_GIMBAL);
   
   
   while(ros::ok) {
-    ros::spinOnce();
+    //ros::spinOnce();
     
-    ROS_INFO("gimbalNode is running");
+    ROS_INFO("gimbalNode is running %d",LOOP_RATE_GIMBAL);
     quatCurrent = RecieveQuaternionIMU();
     
     //quatDesired = PredictQuaternion(quatCurrent, 
     
     RotateServos(quatCurrent, quatDesired);
 
-
+    ros::spinOnce();
     loop_rate.sleep();
   }
   return 0;
