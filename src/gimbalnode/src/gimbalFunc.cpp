@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
     
     ROS_INFO("gimbalNode is running %d",LOOP_RATE_GIMBAL);
     quatCurrent = RecieveQuaternionIMU();
-    ToEulerAngles(quatCurrent, eulerAngles);
+    eulerAngles = ToEulerAngles(quatCurrent);
     ROS_INFO("%f", eulerAngles.roll);
     ROS_INFO("%f", eulerAngles.pitch);
     ROS_INFO("%f", eulerAngles.yaw);
@@ -79,7 +79,7 @@ Quaternion PredictQuaternion(Quaternion current, Quaternion past) {
 }
 
 Quaternion RecieveQuaternionIMU() {
-  Quaternion dummyQuaternion = {0, 0, 0, 1};
+  Quaternion dummyQuaternion = {-.002, -0.801, 0.267, 0.536};
   return dummyQuaternion;
 }
-
+//en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_anglesendif
