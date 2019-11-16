@@ -3,7 +3,7 @@
 
 #include "gimbalFunc.h"
 #include "ToEuler.h"
-//#include "rotateServos.h"
+#include "rotateServos.h"
 
 #include "ros/ros.h"
 #include "geometry_msgs/Quaternion.h"
@@ -23,7 +23,7 @@ Quaternion quatDesired = {
 Quaternion quatCurrent;
 Euler eulerAngles;
 
-void quaternionMessage(const geometry_msgs::Quaternion& msg) { //FIXME Be sure to change this to whatever variable the gyroscope decides to send to the geometry_msgs/Quaternion message!
+void quaternionMessage(const geometry_msgs::Quaternion& msg) {
   quatCurrent.x = msg.x;
   quatCurrent.y = msg.y;
   quatCurrent.z = msg.z;
