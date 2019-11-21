@@ -2,12 +2,15 @@
 #include "rotateServos.h"
 #include "ToEuler.h"
 #include "gimbalFunc.h"
-
+#include <string>
+#include "ros/ros.h"
+#include "std_msgs/String.h"
 
 //Note, why do we need a quaternion output if it's a void function!?
 
-void move(Euler input) {
-//put the "move motors" calculations and all that here. 
+string moveCalculation(Euler input) {
+//put the "move motors" calculations and all that here
+//converts translation into proper string msg 
 }
 
 Euler chunker(Euler input1, Euler input2) {
@@ -21,11 +24,13 @@ void RotateServos(Quaternion input, Quaternion output) {
    Euler iAngles;
    Euler oAngles;
    Euler transform;   
+   std_msgs::String maestroOutput;
    iAngles = ToEulerAngles(input);
    oAngles = ToEulerAngles(output);
    
    transform = chunker(iAngles, oAngles);   
-   move(transform);
+   maestroOutput = moveCalculation(transform);
+   maestro_command.publish(maestroOutput);
 // 
 
 }

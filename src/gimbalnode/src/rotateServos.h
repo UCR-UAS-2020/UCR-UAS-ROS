@@ -1,7 +1,7 @@
 #pragma once
 #include "ToEuler.h"
 
-void move(Euler input);
+void moveCalculation(Euler input);
 
 Euler chunker(Euler input1, Euler input2);
 
