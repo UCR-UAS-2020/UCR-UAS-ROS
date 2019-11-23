@@ -1,5 +1,4 @@
 //Add in the euler converter to the thingy. Question: will the servos move incrementally? How will they adjust path if the quaternions begin to shift drastically?
-//FIXME error: undefined reference to 'ToEulerAngles(Quaternion, Euler)' AND ld returned 1 exit status
 
 #include "gimbalFunc.h"
 #include "ToEuler.h"
@@ -53,9 +52,12 @@ int main(int argc, char** argv) {
     ROS_INFO("gimbalNode is running %d",LOOP_RATE_GIMBAL);
     quatCurrent = RecieveQuaternionIMU();
     eulerAngles = ToEulerAngles(quatCurrent);
+   
+    /*
     ROS_INFO("%f", eulerAngles.roll);
     ROS_INFO("%f", eulerAngles.pitch);
     ROS_INFO("%f", eulerAngles.yaw);
+    */
 
     //quatDesired = PredictQuaternion(quatCurrent, 
     
@@ -67,11 +69,6 @@ int main(int argc, char** argv) {
   return 0;
 }
 
-/*
-void RotateServos(Quaternion input, Quaternion output) {
-  //nothing
-}
-*///Decided that it might be better if we separate RotateServos from main function and create a separate function
 
 Quaternion PredictQuaternion(Quaternion current, Quaternion past) {
   Quaternion dummyQuaternion = {0, 0, 0, 1};
