@@ -28,6 +28,7 @@
 
 using namespace std ;
 
+//might delete some of these functions later
 void initPID(controlVars *ptr){
 	
 }
@@ -190,10 +191,14 @@ int main(){
 	/*
 	 * =========      TO DO:         ========
 	 * ========= get current values =========
+	 * == make while loop for calculations ==
 	 * */
 	 
 	 //initialize the desired Quaternion
 	 desiredQuaternion = initializeQuaternion(desiredQuaternion) ;
+	 
+	 //==========================
+	 //begin while loop here
 	 //calculate error value
 	 errorQuaternion = calculateError(desiredQuaternion, current) ;
 	 //calculate P
