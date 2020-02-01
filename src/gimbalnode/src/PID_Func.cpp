@@ -24,21 +24,33 @@
 
 #include <iostream>
 #include <cmath>
-#include "PID_gimbal.h"				//header from local directory
+#include <sstream>
+#include <sensor_msg/Imu>
+
+//user made headers
+#include "gimbalFunc.h"
+//#include "PID_gimbal.h"				//header from local directory
+#include "ros/ros.h"
+#include "std_msgs/String.h"
 
 using namespace std ;
 
-//might delete some of these functions later
-void initPID(controlVars *ptr){
-	
-}
+double kp, ki, kd, iterationTime;
 
-void setGains(ptr, kp, ki, kd){
-	
+//might delete some of these functions later
+void setGains(kp, ki, kd, iterationTime){
+	//initialize variables needed for PID
+	//the variables can be changed to tune the controller
+	double bias = 0.10 ;
+	double kp = 0.85 ;
+	double ki = 0.12 ;
+	double kd = 0.09 ;
+	double iterationTime = 0.250 ;	//250 [ms] <--> 0.25 [s]
 }
 
 double calculateOutput(controlVars *ptr, error){
-	error =  
+	//maybe do stuff here ... not sure yet
+	//error =  
 }
 
 Quaternion initializeQuaternion(Quaternion desiredQuaternion){
@@ -113,6 +125,11 @@ Quaternion calculateQuaternion(Quaternion proportional, Quaternion integral, Qua
 	return outputQuaternion ;
 }
 
+Quaternion RecieveQuaternionIMU(Quaternion current){
+	//do stuff here
+	return current ;
+}
+
 Quaternion PredictQuaternion(Quaternion current, Quaternion &past){
 	//Quaternion desiredQuaternion ;
 	//accessing data member from struct
@@ -172,16 +189,16 @@ Quaternion PredictQuaternion(Quaternion current, Quaternion &past){
 	//outputQuaternion.w = proportional.w + integral.w + derivative.w + bias ;
 }
 
-int main(){
+int main(int argc, char **argv){
+	//initalize the PID w/ kp, ki, kd, iteration time
+	//need iterationTime for loop_rate(...) function
+	setGains(kp, ki, kd, iterationTime) ;
 	
-	//initialize variables needed for PID
-	//the variables can be changed to tune the controller
-	double bias = 0.10 ;
-	double kp = 0.85 ;
-	double ki = 0.12 ;
-	double kd = 0.09 ;
-	double iterationTime = 0.250 ;	//250 [ms] <--> 0.25 [s]
-	
+	ros::init(argc, argv, "PID_Func") ;
+	ros::NodeHandle n ;
+	ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000) ;
+	ros::Rate loop_rate(iterationTime) ;
+
 	//initialize error vals
 	errorQuaternion.x = 0.00 ;
 	errorQuaternion.y = 0.00 ;
@@ -197,25 +214,40 @@ int main(){
 	 //initialize the desired Quaternion
 	 desiredQuaternion = initializeQuaternion(desiredQuaternion) ;
 	 
+	 int count = 0 ;			//taken from ROS tutorial
 	 //==========================
 	 //begin while loop here
-	 //calculate error value
-	 errorQuaternion = calculateError(desiredQuaternion, current) ;
-	 //calculate P
-	 //P = kp * errorQuaternion
-	 proportional = calculateProportional(errorQuaternion, kp) ;
-	 //calculate I
-	 //I = ki * (kiPrior + errorQuaternion * iterationTime)
-	 integral = calculateIntegral(ki, kiPrior, errorQuaternion, iterationTime) ;
-	 //store integral
-	 kiPrior = storeIntegral(integral) ;
-	 //calculate D
-	 //D = kd * (error - errorPrior)/iterationTime
-	 derivative = calculateDerivative(errorQuaternion, errorPrior, iterationTime, kd) ;
-	 //store error
-	 errorPrior = storeError(errorQuaternion) ;
-	 //output = P + I + D + bias 
-	 outputQuaternion = calculateQuaternion(proportional, integral, derivative, bias) ;
+	 while(ros::ok()){
+		 
+		 std_msgs::String msg ;
+		 std::stringstream ss ;
+		 ss << "Hi " << count ;
+		 msg.data = ss.str() ;
+		 
+		 ROS_INFO("%s", msg.data.c_str());
+		 chatter_pub.publish(msg);
+		 ros::spinOnce() ;
+		 loop_rate.sleep() ;
+		 
+		 //calculate error value
+		 errorQuaternion = calculateError(desiredQuaternion, current) ;
+		 //calculate P
+		 //P = kp * errorQuaternion
+		 proportional = calculateProportional(errorQuaternion, kp) ;
+		 //calculate I
+		 //I = ki * (kiPrior + errorQuaternion * iterationTime)
+		 integral = calculateIntegral(ki, kiPrior, errorQuaternion, iterationTime) ;
+		 //store integral
+		 kiPrior = storeIntegral(integral) ;
+		 //calculate D
+		 //D = kd * (error - errorPrior)/iterationTime
+		 derivative = calculateDerivative(errorQuaternion, errorPrior, iterationTime, kd) ;
+		 //store error
+		 errorPrior = storeError(errorQuaternion) ;
+		 //output = P + I + D + bias 
+		 outputQuaternion = calculateQuaternion(proportional, integral, derivative, bias) ;
+		 
+	}
 	
 	return 0 ;
 }

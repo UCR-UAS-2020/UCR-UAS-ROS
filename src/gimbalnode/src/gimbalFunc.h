@@ -1,3 +1,6 @@
+#ifndef gimbalFunc
+#define gimbalFunc
+
 struct Quaternion {
   double x;
   double y;
@@ -18,6 +21,7 @@ Quaternion derivative ;
 Quaternion errorPrior ;
 Quaternion outputQuaternion ;
 
+//list functions
 Quaternion initializeQuaternion(Quaternion desiredQuaternion) ;
 Quaternion calculateError(Quaternion desiredQuaternion, Quaternion current) ;
 Quaternion calculateProportional(Quaternion errorQuaternion, double kp) ;
@@ -31,3 +35,4 @@ Quaternion PredictQuaternion(Quaternion current, Quaternion past);
 
 Quaternion RecieveQuaternionIMU();
 
+#endif
