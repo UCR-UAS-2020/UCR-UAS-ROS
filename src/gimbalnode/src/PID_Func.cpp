@@ -25,11 +25,11 @@
 #include <iostream>
 #include <cmath>
 #include <sstream>
-#include <sensor_msg/Imu>
+#include <sensor_msg/Imu.h>
 
 //user made headers
 #include "gimbalFunc.h"
-//#include "PID_gimbal.h"				//header from local directory
+//#include "PID_gimbal.h"				//header from local directory ... wont use this
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 
@@ -41,11 +41,11 @@ double kp, ki, kd, iterationTime;
 void setGains(kp, ki, kd, iterationTime){
 	//initialize variables needed for PID
 	//the variables can be changed to tune the controller
-	double bias = 0.10 ;
-	double kp = 0.85 ;
-	double ki = 0.12 ;
-	double kd = 0.09 ;
-	double iterationTime = 0.250 ;	//250 [ms] <--> 0.25 [s]
+	bias = 0.10 ;
+	kp = 0.85 ;
+	ki = 0.12 ;
+	kd = 0.09 ;
+	iterationTime = 0.250 ;	//250 [ms] <--> 0.25 [s]
 }
 
 double calculateOutput(controlVars *ptr, error){
@@ -196,7 +196,8 @@ int main(int argc, char **argv){
 	
 	ros::init(argc, argv, "PID_Func") ;
 	ros::NodeHandle n ;
-	ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000) ;
+	//might change std_msg --> sensor_msg
+	ros::Publisher chatter_pub = n.advertise<std_msg::String>("chatter", 1000) ;
 	ros::Rate loop_rate(iterationTime) ;
 
 	//initialize error vals
