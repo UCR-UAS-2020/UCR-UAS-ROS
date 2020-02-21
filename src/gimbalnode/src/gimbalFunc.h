@@ -41,7 +41,7 @@ Quaternion RecieveQuaternionIMU();
 
 void storeServoVals(firstServo, secondServo) ;
 void rotateQuaternion() ;
-void quaternionToRPY() ;
+void quaternionToRPY(Quaternion currentQuaternion) ;
 Quaternion compareServoVals(Quaternion current, Quaternion ) ;
 
 #endif

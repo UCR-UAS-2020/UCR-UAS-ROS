@@ -30,36 +30,41 @@
 #include <cmath>
 #include <sstream>
 #include <sensor_msg/Imu.h>
-#include <tf2/LinearMath/Quaternion.h>			//allows tf classes
+#include <tf2/LinearMath/Quaternion.h>			//allows tf2 classes
 #include <tf2_geometry_msgs/tf2_geometry_msgs>  //converts between msg and tf
 
+#include "tf/transform_datatypes.h"				//used for tf
 #include "gimbalFunc.h"
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 
 using namespace std ;
 
-const double pi = 3.14159 ;
+const double pi = 3.14159 ;						//used in rotation function
 
 //function that predicts euler angles
 
 //function applies quaternion rotation
 void rotateQuaternion(Quaternion desiredQuaternion){
-	tf2::Quaternion q_orig, q_rot, q_new ;
+	//tf2::Quaternion q_orig, q_rot, q_new ;
+	tf2::Quaternion q_rot, q_new ;
 	double r = pi, p = 0, y = 0 ; 
 	
+	//get original orientation of 'command_pose'
 	tf2::convert(command_pose.pose.orientation, q_orig) ;
 	q_rot.setRPY(r, p, y) ;
+	//calculate new quaternion
 	q_new = q_rot * q_orig ;
 	q_new.normalize() ;
 	
+	//convert into msg type
 	tf2::convert(q_new, command_pose.pose.orientation) ;
 }
 
 //converts from quaternion to RPY
-void quaternionToRPY(){
+void quaternionToRPY(Quaternion currentQuaternion){
 	tfScalar yaw, pitch, roll ;
-	tf::Matrix3x3 mat(q) ;
+	tf::Matrix3x3 mat(currentQuaternion) ;
 	mat.getEulerYPR(&yaw, &pitch, &roll) ;
 }
 
@@ -78,19 +83,6 @@ void storeServoVals(Quaternion firstServo, Quaternion secondServo){
 	storeSecondServo.w = secondServo.w ;
 }
 
-//function to get maestro vals
-int getGyroData(int port, int servo){
-	//from maestro user guide, serial servo commands:
-	//channel number: 0x90
-	//maximum [us] is ~4000 --> maximum [s] is 0.004		change iteration time in PID_Func?
-	unsigned char command[2] ;						//use (2) u.c. 
-	command[1] = 0x90 ;								//command to get position
-	command[2] = servo ;							//holds servo value
-	
-	return 1 ;			//place holder value until function is finished
-}
-
-
 //function that compares vals
 Quaternion compareServoVals(Quaternion current, ) {
 	
@@ -99,7 +91,12 @@ Quaternion compareServoVals(Quaternion current, ) {
 
 int main(int argc, char **argv) {
 	
+	ros::init(argc, argv, "quaternionPID") ;
+	ros::NodeHandle p ;
+	ros::Subscriber subscribePos ;
+	subscribePos = p.subscribe(
 	
+	ros::spin() ;
 	return 0;
 }
 
