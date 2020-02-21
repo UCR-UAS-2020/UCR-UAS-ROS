@@ -54,10 +54,10 @@ double calculateOutput(controlVars *ptr, error){
 }
 
 Quaternion initializeQuaternion(Quaternion desiredQuaternion){
-	desiredQuaternion.x = 1 ;
+	desiredQuaternion.x = 0 ;
 	desiredQuaternion.y = 0 ;
 	desiredQuaternion.z = 0 ;
-	desiredQuaternion.w = 0 ;
+	desiredQuaternion.w = 1 ;
 	
 	return desiredQuaternion ;
 }

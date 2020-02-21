@@ -20,6 +20,10 @@ Quaternion kiPrior ;
 Quaternion derivative ;
 Quaternion errorPrior ;
 Quaternion outputQuaternion ;
+Quaternion firstServo ;				//used to get vals from servo motors
+Quaternion secondServo ;
+Quaternion storeFirstServo ;
+Quaternion storeSecondServo ;
 
 //list functions
 Quaternion initializeQuaternion(Quaternion desiredQuaternion) ;
@@ -34,5 +38,10 @@ Quaternion calculateQuaternion(Quaternion proportional, Quaternion integral, Qua
 Quaternion PredictQuaternion(Quaternion current, Quaternion past);
 
 Quaternion RecieveQuaternionIMU();
+
+void storeServoVals(firstServo, secondServo) ;
+void rotateQuaternion() ;
+void quaternionToRPY() ;
+Quaternion compareServoVals(Quaternion current, Quaternion ) ;
 
 #endif
