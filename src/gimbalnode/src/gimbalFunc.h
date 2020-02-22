@@ -8,6 +8,12 @@ struct Quaternion {
   double w;
 };
 
+struct eulerAngles{	//made this struct in case of using it to compare servo vals
+	double roll ;
+	double pitch ;
+	double yaw ;
+};
+
 void RotateServos(Quaternion input, Quaternion output);
 
 //listing all quaternions that will be used
@@ -40,8 +46,14 @@ Quaternion PredictQuaternion(Quaternion current, Quaternion past);
 Quaternion RecieveQuaternionIMU();
 
 void storeServoVals(firstServo, secondServo) ;
-void rotateQuaternion() ;
+void rotateQuaternion(Quaternion desiredQuaternion) ;
+//void rotateAboutX(Quaternion current) ;
+void rotateAboutY(Quaternion desiredQuaternion) ;
+void rotateAboutZ(Quaternion desiredQuaternion) ;
 void quaternionToRPY(Quaternion currentQuaternion) ;
+void eulerCallback(const tf2_geometry_msgs::tf2_geometry_msgs::ConstPtr& msg) ;
+void maestroCallback(const std_msgs::String::ConstPtr& msg) ;
+void initMaestro() ;
 Quaternion compareServoVals(Quaternion current, Quaternion ) ;
 
 #endif
