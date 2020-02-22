@@ -47,6 +47,7 @@ Quaternion RecieveQuaternionIMU();
 
 void storeServoVals(firstServo, secondServo) ;
 void rotateQuaternion(Quaternion desiredQuaternion) ;
+void convertRPYtoPYR() ;
 //void rotateAboutX(Quaternion current) ;
 void rotateAboutY(Quaternion desiredQuaternion) ;
 void rotateAboutZ(Quaternion desiredQuaternion) ;

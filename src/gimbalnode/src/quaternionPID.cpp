@@ -111,6 +111,40 @@ void quaternionToRPY(Quaternion currentQuaternion){
 	mat.getRPY(&roll, &pitch, &yaw) ;
 }
 
+//--------- TODO ---------
+//----figure out what ----
+//--- the parameters -----
+//------ should be -------
+//convert from RPY --> YPR
+//this essentially functions as getEulerYPR
+//since it takes in a quaternion and turns into YPR
+void convertRPYtoPYR(){
+	tf2::Quaternion q_orig, q_rot, q_new ;
+	double r = 0, p = 0 ; y = 0 ;
+	
+	tf2::convert(command_pose.pose.orientation, q_orig) ;
+	//rotate about x by 2pi
+	q_rot.set(2*pi, p, y) ;
+	q_new = q_rot * q_orig ;
+	q_new.normalize() ;
+	//give q_orig the vals of q_rot
+	q_orig = q_rot ;
+	
+	//rotate about y by 2pi
+	q_rot.set(r, 2*pi, y) ;
+	q_new = q_rot * q_orig ;
+	q_new.normalize() ;
+	//give q_orig the vals of q_rot 
+	q_orig = q_rot ;
+	
+	//rotate about z by 2pi
+	q_rot.set(r, p, 2*pi) ;
+	q_new = q_rot * q_orig ;
+	q_new.normalize() ;
+	
+	tf2::convert(q_new, command_pose.pose.orientation) ;
+}
+
 //function that stores servo vals
 //servo vals will come from Maestro ... they will also be euler angles
 void storeServoVals(Quaternion firstServo, Quaternion secondServo){
