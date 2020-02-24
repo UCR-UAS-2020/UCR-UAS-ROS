@@ -47,7 +47,7 @@ int getGyroData(int port, int channel){
 	//from maestro user guide, serial servo commands:
 	//channel number: 0x90
 	//maximum [us] is ~4000 --> maximum [s] is 0.004		change iteration time in PID_Func?
-	unsigned char command[2] ;								//use (2) u.c. 
+	int command[2] ;										//use (2) ints
 	command[0] = 0x90 ;										//command to get position
 	command[1] = channel ;
 										//holds servo value
