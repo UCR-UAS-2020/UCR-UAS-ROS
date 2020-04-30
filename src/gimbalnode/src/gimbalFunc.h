@@ -54,7 +54,9 @@ void rotateAboutZ(Quaternion desiredQuaternion) ;
 void quaternionToRPY(Quaternion currentQuaternion) ;
 void eulerCallback(const tf2_geometry_msgs::tf2_geometry_msgs::ConstPtr& msg) ;
 void maestroCallback(const std_msgs::String::ConstPtr& msg) ;
-void initMaestro() ;
+void initMaestro(void) ;
+int setTarget(int fd, unsigned char channel, unsigned short target) ;
+int getGyroData(int port, int channel) ;
 Quaternion compareServoVals(Quaternion current, Quaternion ) ;
 
 #endif

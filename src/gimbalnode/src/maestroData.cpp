@@ -47,11 +47,11 @@ int getGyroData(int port, int channel){
 	//from maestro user guide, serial servo commands:
 	//channel number: 0x90
 	//maximum [us] is ~4000 --> maximum [s] is 0.004		change iteration time in PID_Func?
-	int command[2] ;										//use (2) ints
+	unsigned char command[2] ;
 	command[0] = 0x90 ;										//command to get position
 	command[1] = channel ;
 										//holds servo value
-	if(write(port, command, sizeof(commands) == -1){
+	if(write(port, command, sizeof(commands)) == -1){
 		perror("error in writing") ;
 		return -1 ;
 	}
@@ -62,12 +62,30 @@ int getGyroData(int port, int channel){
 		return -1 ;
 	}
 	
-	return response[0] + 256 * response[1] ;
+	return response[0] + (response[1] << 8) ;
+}
+
+int setTarget(int fd, unsigned char channel, unsigned short target){
+	unsigned char command[] = { 0x84,
+								channel,
+								static_cast<unsigned char>(target & 0x7F),
+								(target >> 7) & 0x7F
+							   } ;
+	
+	//write(fd, buffer, nbytes) specifies: 
+	//file descriptor, char array (stores content from fd), and
+	//nbytes (number of bytes written from file to char array)
+	if(write(fd, command, sizeof(command)) == -1){
+		perror("error in writing") ;
+		return -1 ;
+	}				
+	return 0 ;		   
 }
 
 void maestroCallback(const std_msgs::String::ConstPtr& msg) {
 	//also from github
 	std::string temp = msg->data ;
+	int gyroDataVal ;
 	//substr has arguments of (position, length) for string
 	//can also have (position) where length is npos
 	std::string channel = temp.substr(0, 2) ;		//should be within [0,5]
@@ -85,13 +103,13 @@ void maestroCallback(const std_msgs::String::ConstPtr& msg) {
 		ROS_ERROR("Not within bounds ... target read: %d", targetRead) ;
 	}
 	else{
-		int gyroDataVal ;
 		gyroDataVal = getGyroData(fd, 5) ;
 		ROS_INFO("Current position is: %d", gyroDataVal) ;
+		maestroTarget = setTarget(fd, channelRead, targetRead*4) ;
 	}
 }
 
-void initMaestro(){
+void initMaestro(void){
 	struct termios options ;
 	tcgetattr(fd, &options);
 	options.c_iflag &= ~(INLCR | IGNCR | ICRNL | IXON | IXOFF);
@@ -117,6 +135,7 @@ int main(int argc, char **argv) {
 	ros::Subscriber subMaestro = n_maestro.subscribe("commandingMaestro", 10, maestroCallback) ;
 	ros::spin() ;
 	
+	close(fd) ;
 	return 0;
 }
 
