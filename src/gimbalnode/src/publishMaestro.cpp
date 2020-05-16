@@ -31,5 +31,7 @@ int main(int argc, char **argv){
 		loop_rate.sleep() ;
 	}
 	
+	ROS_INFO("Exited node") ;
+	
 	return 0 ;
 }

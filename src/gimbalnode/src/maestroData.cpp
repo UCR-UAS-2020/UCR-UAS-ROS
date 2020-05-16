@@ -32,6 +32,9 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 
+#define minTarget 1100		//minimum motor val
+#define maxTarget 1900		//maximum motor val
+
 using namespace std ;
 
 int fd ;
@@ -99,7 +102,7 @@ void maestroCallback(const std_msgs::String::ConstPtr& msg) {
 		ROS_ERROR("Not within channels 0-5 ... channel read: %d", channelRead) ;
 	}
 	//following values can be modified for motor
-	else if(!(targetRead >= 1100 && targetRead <= 1900)){
+	else if(!(targetRead >= minTarget && targetRead <= maxTarget)){
 		ROS_ERROR("Not within bounds ... target read: %d", targetRead) ;
 	}
 	else{
@@ -131,11 +134,34 @@ int main(int argc, char **argv) {
 											//check maestro github for further details
 	
 	ros::init(argc, argv, "maestroData") ;
-	ros::Nodehandle n_maestro ;
+	ros::Nodehandle n_maestro, n_pub ;
+	ros::Publisher publishToMaestro = n_pub.advertise<std_msgs::String>("commandingMaestro", 10) ;
+	ros::Rate loop_rate(10) ;
+	std_msgs::String msg ;
+	std::stringstream ss ;
+	
+	//place holder values for motor
+	Motor m ;
+	m.defaultPosition = 1500 ;
+	m.motor_id = 1 ;
+	
+	ss << m.motor_id << m.defaultPosition ;
+	
+	msg.data = "0" + ss.str() ;
+	
+	//check to see if output is "011500"
+	ROS_INFO("%s", msg.data.c_str()) ;
+	//publish msg
+	publishToMaestro.publish(msg) ;
+	
 	ros::Subscriber subMaestro = n_maestro.subscribe("commandingMaestro", 10, maestroCallback) ;
+	
 	ros::spin() ;
 	
+	loop_rate.sleep() ;
+	
 	close(fd) ;
+	
 	return 0;
 }
 

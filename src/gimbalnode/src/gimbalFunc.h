@@ -14,6 +14,12 @@ struct eulerAngles{	//made this struct in case of using it to compare servo vals
 	double yaw ;
 };
 
+struct Motor{
+	int pololu_id ;
+	int motor_id ;
+	int defaultPosition = 1500;
+}
+
 void RotateServos(Quaternion input, Quaternion output);
 
 //listing all quaternions that will be used
